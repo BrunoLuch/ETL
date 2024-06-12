@@ -1,0 +1,43 @@
+import psycopg2
+
+# Detalhes da conexão
+host = 'seu-endereco-do-servidor'
+port = '5432'
+database = 'nome-do-seu-database'
+user = 'seu-username'
+password = 'sua-senha'
+
+try:
+    connection = psycopg2.connect(
+        host=host,
+        port=port,
+        database=database,
+        user=user,
+        password=password
+    )
+    cursor = connection.cursor()
+
+    # Criar um tablespace
+    create_tablespace_query = '''
+    CREATE TABLESPACE fast_space LOCATION '/mnt/ssd_drive';
+    '''
+    cursor.execute(create_tablespace_query)
+    connection.commit()
+    print("Tablespace criado com sucesso!")
+
+    # Criar uma tabela no novo tablespace
+    create_table_query = '''
+    CREATE TABLE usuarios (
+        id SERIAL PRIMARY KEY,
+        nome VARCHAR(100)
+    ) TABLESPACE fast_space;
+    '''
+    cursor.execute(create_table_query)
+    connection.commit()
+    print("Tabela criada com sucesso no tablespace!")
+
+    cursor.close()
+    connection.close()
+
+except Exception as error:
+    print("Erro ao conectar ao PostgreSQL ou executar as consultas", error)

@@ -1,0 +1,41 @@
+CODIGO PYTHON INTEGRAÇÃO
+
+import pyodbc
+
+# Configurações de conexão
+server = 'nome_do_servidor'  # Substitua pelo nome ou endereço IP do seu servidor SQL Server
+database = 'nome_do_banco_de_dados'  # Substitua pelo nome do seu banco de dados
+username = 'seu_usuario'  # Substitua pelo seu nome de usuário
+password = 'sua_senha'  # Substitua pela sua senha
+
+# Conexão ao banco de dados
+try:
+    connection = pyodbc.connect(
+        'DRIVER={ODBC Driver 17 for SQL Server};'
+        'SERVER=' + server + ';'
+        'DATABASE=' + database + ';'
+        'UID=' + username + ';'
+        'PWD=' + password
+    )
+    print("Conexão bem-sucedida!")
+except Exception as e:
+    print("Erro ao conectar ao banco de dados:", e)
+    exit()
+
+# Criação de um cursor
+cursor = connection.cursor()
+
+# Execução de uma consulta SQL
+query = "SELECT * FROM nome_da_tabela"  # Substitua pela sua consulta SQL
+try:
+    cursor.execute(query)
+    rows = cursor.fetchall()
+
+    # Exibição dos resultados
+    for row in rows:
+        print(row)
+except Exception as e:
+    print("Erro ao executar a consulta:", e)
+
+# Fechamento da conexão
+connection.close()
