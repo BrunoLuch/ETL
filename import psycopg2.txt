@@ -1,0 +1,32 @@
+import psycopg2
+
+# Detalhes da conexão
+host = 'seu-endereco-do-cluster.cluster-identifier.region.rds.amazonaws.com'
+port = '5432'
+database = 'nome-do-seu-database'
+user = 'seu-username'
+password = 'sua-senha'
+
+try:
+    connection = psycopg2.connect(
+        host=host,
+        port=port,
+        database=database,
+        user=user,
+        password=password
+    )
+    cursor = connection.cursor()
+
+    # Criação de um índice B-tree
+    create_index_query = '''
+    CREATE INDEX nome_do_indice ON nome_da_tabela (coluna1);
+    '''
+    cursor.execute(create_index_query)
+    connection.commit()
+    print("Índice criado com sucesso!")
+    
+    cursor.close()
+    connection.close()
+
+except Exception as error:
+    print("Erro ao conectar ao PostgreSQL ou ao criar o índice", error)
